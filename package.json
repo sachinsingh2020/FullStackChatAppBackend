@@ -26,5 +26,8 @@
     "nodemon": "^2.0.22",
     "socket.io": "^4.5.4",
     "validator": "^13.9.0"
+  },
+  "engines": {
+    "node": ">=14.20.1"
   }
 }

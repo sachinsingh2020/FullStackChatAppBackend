@@ -58,14 +58,58 @@ export const allMessages = catchAsyncError(async (req, res, next) => {
         .populate("sender", "name pic email")
         .populate("chat");
 
-    //     myAllMessages = await User.populate(myAllMessages, {
-    //     path: "chat.users",
-    //     select: "name pic email",
-    // });
-    // console.log(myAllMessages)
 
     res.status(200).json({
         success: true,
         myAllMessages,
+    });
+});
+
+export const seenAllMessagesFromChat = catchAsyncError(async (req, res, next) => {
+    const { chatId } = req.body;
+
+    let myAllMessages = await Message.find({ chat: chatId }).updateMany({ seen: true });
+
+    res.status(200).json({
+        success: true,
+        myAllMessages
+    });
+});
+
+export const fetchAllMessages = catchAsyncError(async (req, res, next) => {
+
+    let sac = await Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
+    // console.log("sac", sac);
+    let myAllMessages = await Message.find({
+        chat: { $in: sac }
+    }).populate("sender", "name pic email").populate("chat");
+
+    myAllMessages = await User.populate(myAllMessages, {
+        path: "chat.users",
+        select: "name pic email",
+    });
+
+    // console.log(myAllMessages)
+
+    res.status(200).json({
+        success: true,
+        myAllMessages
+    });
+});
+
+
+
+
+export const seenMessage = catchAsyncError(async (req, res, next) => {
+    const { messageId } = req.body;
+    console.log(messageId);
+
+    await Message.updateMany({ _id: messageId }, {
+        seen: true,
+    })
+
+    res.status(200).json({
+        success: true,
+        value: true,
     });
 });

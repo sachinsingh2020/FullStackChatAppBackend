@@ -9,14 +9,18 @@ const schema = mongoose.Schema({
         type: String,
         trim: true,
     },
-    chat:{
+    seen: {
+        type: Boolean,
+        default: false,
+    },
+    chat: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Chat",
     }
 },
-{
-    timeStamps: true,
-}
+    {
+        timeStamps: true,
+    }
 )
 
 export const Message = mongoose.model("Message", schema);
